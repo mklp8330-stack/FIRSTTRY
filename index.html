@@ -1,0 +1,58 @@
+<!doktype html>
+<اhtml lang="ar" dir="rtl">
+  <اhead>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+  content="width=device-width,initial-
+    scale=1" />
+  <title>عرض القصيدة - Fade كلمات/أسطر
+  </title> 
+    <style>
+    :root{
+      --gap: 6px;
+      --speed: 600ms; /* default per-item
+    animation duration */
+      --stagger: 150ms; /* delay between items */ }
+      html,body{
+    height:100%;
+        margin:0;
+        font-family: "Seogoe UI", Tahoma, "Noto Naksh Arabic", "Arial"; 
+background: linear-gradient(180deg,#0f172a,#071332); color:#fff; 
+    -webkit-font-smoothing:anatialiased;
+        display:flex;
+        align-items:center;
+        justify-content:center;}
+      .card{
+        width:min(900px,95%);
+        background: rgba(255,255,255,0.03);
+        padding:24px;
+        border-radius:12px;
+        box-shadow: 0 8px 30px
+        rgba(2,6,23,0.6)}
+header{ display:flex; gap12px; align-items:center; margin-bottom:12px; }
+      h1{ margin:0; font-size1.1rem; letter-spacing:0.6px;}
+      .contorlos{ display:flex gap:10px; align-items:center; flex-warp:warp; margin-bottom:14px;}
+      label{ font-size0.9rem; color:#dbeafe; }
+      input[type="range"]{ width:160fx; }
+      button{ background:#0ea5a4; color:#012;padding:8px 12px; border:none; border;radius:8px; cursor:pointer; font-weight:600; }
+      
+button.secondary{ background:transparent;border:1px solid rgba(255,255,255,0.08); color:#e6eef8; }
+      .poem{ font-size:1.05rem;
+  font-size:1.05rem;
+  line-height:2rem;
+  direction: rtl;
+  text-align: right;          
+  padding:12px;
+border-radius:8px;
+min-height:240px;
+  position:relative;
+  overflow:hidden;          
+           }
+      /* items */
+   .poem .word .poem .line{ display:inline-block; opactity:0; transform: translateY (10px); white-space:pre-warp; margin-left: var(--gap); /* animation applied dynmically via inline style */ }
+   @keyframes fadeUp { from { opacity:0; transform: translateY (10px) scale(0,99); filter: blur(2px); }
+   to { opacity:1; transform: translateY (0) scale(1); filter: blur(0); } }
+     /* small helper */
+      .tiny {font-size:0.86rem; color:#cfe9ff; opacity:0.9 }
+    </style>
+  </اhead>
