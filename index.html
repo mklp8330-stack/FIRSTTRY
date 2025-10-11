@@ -91,4 +91,120 @@ min-height:240px;
    "لَمَعَت كَبارِقِ ثَغرِكِ المُتَبَسَّمِ --> </div>
   <div class="note">stagger لكل سطر </div> 
   <div class="host-list"> 
+    <strong></strong>
+    <ul>
+    <li><strong>Github Pages</strong></li> 
+    </ul>
+    <div class="tiny"> <div>
+    </div>
+    </div>
+    <script>
+const poemEl = document.getElmentByld('poem');
+const playBtn = document.getElmentByld('play');
+const resetBtn = document.getElmentByld('reset');     
+const modeSelect =  document.getElmentByld('mode');
+ const speedRange =  document.getElmentByld('speed');   
+ const speedVal   = document.getElmentByld('speedVal');
+ const staggerRang  = document.getElmentByld('stagger');
+  const staggerVal = document.getElmentByld('staggerVal');
+  const loopCheckbox = document.getElmentByld('loop'); 
+
+    function renderByWords() {
+  clearPoem();
+  const lines = originalText.split(/\n/).map(l  => l.trim()).filter(Boolean);
+  lines.forEach((ln, li) => {
+    const words = ln.split(/(\s+)/);
+    words.forEach((w, wi) => {
+      const span = document.createElement('span');
+      span.className = 'word';
+      span.textContent = w;
+      if (/^\s+$/.test(w)) span.style.marginLeft = '0';
+      poemEl.appendChild(span);
+    });
+    poemEl.appendChild(document.createElement('br'));
+  });
+}
+
+function renderByLines() {
+  clearPoem();
+  const lines = originalText.split(/\n/).map(l => l.trim()).filter(Boolean);
+  let actualLines = lines;
+  if (actualLines.length === 0) actualLines = [originalText];
+  if (actualLines.length === 1) {
+    actualLines = originalText.split(/([.؟?!]+)\s*/).filter(Boolean).reduce((acc, cur, idx, arr) => {
+      if (/[.؟?!]+/.test(cur) && acc.length) {
+        acc[acc.length-1] += cur;
+      } else acc.push(cur);
+      return acc;
+    }, []);
+  }
+  actualLines.forEach(ln => {
+    const span = document.createElement('span');
+    span.className = 'line';
+    span.textContent = ln.trim();
+    poemEl.appendChild(span);
+    poemEl.appendChild(document.createElement('br'));
+  });
+}
+
+function animate() {
+  const speed = parseInt(speedRange.value,10);
+  const stagger = parseInt(staggerRange.value,10);
+  const items = Array.from(poemEl.querySelectorAll('.word, .line'));
+  items.forEach(it => {
+    it.style.animation = 'none';
+    it.style.opacity = 0;
+  });
+
+  void poemEl.offsetWidth;
+
+  items.forEach((it, idx) => {
+    const delay = (stagger * idx) / 1000;
+    const duration = speed / 1000;
+    it.style.animation = fadeUp ${duration}s ${delay}s forwards cubic-bezier(.2,.8,.2,1);
+  });
+
+  if (loopCheckbox.checked) {
+    const totalMs = (stagger * (items.length-1)) + parseInt(speedRange.value,10) + 400;
+    setTimeout(() => {
+      animate();
+    }, totalMs);
+  }
+}
+
+renderByWords();
+
+playBtn.addEventListener('click', () => {
+  if (modeSelect.value === 'word') renderByWords();
+  else renderByLines();
+  document.documentElement.style.setProperty('--speed', speedRange.value + 'ms');
+  document.documentElement.style.setProperty('--stagger', staggerRange.value + 'ms');
+  animate();
+});
+
+resetBtn.addEventListener('click', () => {
+  clearPoem();
+  poemEl.textContent = originalText;
+});
+
+modeSelect.addEventListener('change', () => {
+  if (modeSelect.value === 'word') renderByWords();
+  else renderByLines();
+});
+
+speedRange.addEventListener('input', (e) => {
+  speedVal.textContent = e.target.value;
+});
+staggerRange.addEventListener('input', (e) => {
+  staggerVal.textContent = e.target.value;
+});
+
+speedVal.textContent = speedRange.value;
+staggerVal.textContent = staggerRange.value;
+
+// document.getElementById('play').click();
+                  
+                          
+    </script>
   </body>
+  </html>
