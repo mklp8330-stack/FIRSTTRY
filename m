@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>عرض القصيدة - Fade كلمات/أسطر</title>
+  <style>
+    :root{
+      --gap: 6px;
+      --speed: 600ms; /* default per-item animation duration */
+      --stagger: 150ms; /* delay between items */
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", "Arial";
+      background: linear-gradient(180deg,#0f172a,#071332);
+      color:#fff;
+      -webkit-font-smoothing:antialiased;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .card{
+      width:min(900px,95%);
+      background: rgba(255,255,255,0.03);
+      padding:24px;
+      border-radius:12px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+    header{ display:flex; gap:12px; align-items:center; margin-bottom:12px; }
+    h1{ margin:0; font-size:1.1rem; letter-spacing:0.6px; }
+    .controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:14px;}
+    label{ font-size:0.9rem; color:#dbeafe; }
+    input[type="range"]{ width:160px; }
+    button{ background:#0ea5a4; color:#012; padding:8px 12px; border:none; border-radius:8px; cursor:pointer; font-weight:600; }
+    button.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.08); color:#e6eef8; }
+    .poem{
+      font-size:1.05rem;
+      line-height:2rem;
+      direction: rtl;
+      text-align: right;
+      padding:12px;
+      border-radius:8px;
+      min-height:240px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* items */
+    .poem .word, .poem .line{
+      display:inline-block;
+      opacity:0;
+      transform: translateY(10px);
+      white-space:pre-wrap;
+      margin-left: var(--gap);
+      /* animation applied dynamically via inline style */
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(10px) scale(0.99); filter: blur(2px); }
+      to   { opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    /* small helper */
+    .tiny { font-size:0.86rem; color:#cfe9ff; opacity:0.9; }
+    .note{ margin-top:10px; font-size:0.88rem; color:#cbd5e1; }
+    .host-list{ margin-top:12px; font-size:0.9rem; }
+    .host-list li{ margin-bottom:6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <h1>عرض القصيدة — fade لكل كلمة أو لكل سطر</h1>
+    </header>
+
+    <div class="controls">
+      <label class="tiny">الوضــع:
+        <select id="mode">
+          <option value="word">لكل كلمة</option>
+          <option value="line">لكل سطر</option>
+        </select>
+      </label>
+
+      <label class="tiny">سرعة التلاشي (ms):
+        <input id="speed" type="range" min="200" max="1800" step="50" value="600">
+        <span id="speedVal">600</span>
+      </label>
+
+      <label class="tiny">فاصل بين الكلمات/الأسطر (ms):
+        <input id="stagger" type="range" min="20" max="500" step="10" value="150">
+        <span id="staggerVal">150</span>
+      </label>
+
+      <label class="tiny"><input id="loop" type="checkbox"> تكرار</label>
+
+      <button id="play">شغّل</button>
+      <button id="reset" class="secondary">إعادة</button>
+    </div>
+
+    <div id="poem" class="poem" aria-live="polite">
+      <!-- النص الأصلي للقصة يوضع هنا (سيتحوّل تلقائيًا) -->
+      وداعيه تهز ضلوع صدر العاشق الولبان وداع فيه من صدق الحزن مالا ينسيني فمان اللّٰه وعيون السهر في داعت الرحمن فمان اللّٰه ي أول من سكن من بيني وبيني فمان اللّٰه يا أخر جرح دامي وأول الخلان فمان الله يا ملح القصيد وباقي سنيني غمان اللّهّيا من لك بقلبي مرتع و أوطان ولك بين الضلوع العوج بيت ولك عناويني عليك أرسل مراسل الغرام بلبفة الأحزان وأتوق لرد يذبح طاري الفرقى ويحييني وأنادي يافلان إقرا الرسايل طالبك يافلان وليفي شف غرامك ويش سوًا في شراييني وأعرف إنك قريت اللي كتبت وفي بعض الاحيان تشوف الواردات وترد . . ولا تحاكيني وأنا ماني سفيه وما قفي ما يقبل السقهان ولا أقبل كل شخص يفرد ضلوعي ويكويني ياكون انت الوحيد أسامحك وأغليك مهما كان قسم بالله ما قبلك حدٍ ل أجله بكت عيني عطاك اللّٰه من أوصاف الجمال الطاغي الفتان وعطيتك معظم شعور الغلا من دون تعحليني تعبت أراقبك وأطرد سرابك تايه وضميان أسوق الرجل وأقدار الزمن صوبك توديني ودريت إنك ل غيري وانفجر وسط الصدر شريان رحلت وقلت يا نبض الغلا وينك وأنا ويني بموت من الحزن ومن الفراق ومن جفى الخلان لكني لو بموت ؟ أهون ولا طرد المقفيني قمان اللّه . هاك آخر قصيده مالها عنوان ولكن طالبك لا أقفيت عني لا تخليني
+    </div>
+
+    <div class="note">نصيحة: لو تحبين تأثير أقوى خليه "لكل كلمة" وقللي الـstagger، أما لو تفضلي إيقاع أبطأ اختاري "لكل سطر".</div>
+
+    <div class="host-list">
+      <strong>مواقع سريعة لرفع الصفحة (خيارك):</strong>
+      <ul>
+        <li><strong>GitHub Pages</strong> — مجاني وسهل إذا عندك حساب GitHub (انسخ الملف repo → enable Pages).</li>
+        <li><strong>Netlify</strong> — سحب وإفلات ملف الـzip أو ربط مع Git ونشر مباشر (مجاني للمواقع البسيطة).</li>
+        <li><strong>Vercel</strong> — مناسب للـfront-end، سهل الربط مع Git أيضاً.</li>
+      </ul>
+      <div class="tiny">لو تحبين أكتب لك خطوات مبسطة لأي واحد منهم خطوة بخطوة.</div>
+    </div>
+  </div>
+
+  <script>
+    // عناصر الواجهة
+    const poemEl = document.getElementById('poem');
+    const playBtn = document.getElementById('play');
+    const resetBtn = document.getElementById('reset');
+    const modeSelect = document.getElementById('mode');
+    const speedRange = document.getElementById('speed');
+    const speedVal = document.getElementById('speedVal');
+    const staggerRange = document.getElementById('stagger');
+    const staggerVal = document.getElementById('staggerVal');
+    const loopCheckbox = document.getElementById('loop');
+
+    // حفظ النص الأصلي
+    const originalText = poemEl.textContent.trim();
+
+    // وظائف مساعدة
+    function clearPoem() {
+      poemEl.innerHTML = '';
+    }
+
+    function renderByWords() {
+      clearPoem();
+      // ننقسم على علامات السطر الأصلية كي نحافظ على الفواصل
+      const lines = originalText.split(/\n/).map(l => l.trim()).filter(Boolean);
+      // لو النص عبارة عن سطر واحد، نقسم على المسافات مع الحفاظ على علامات الترقيم
+      // سنعالج كل سطر على حدة لإبقاء الفواصل
+      lines.forEach((ln, li) => {
+        const words = ln.split(/(\s+)/); // نحافظ على المسافات كعناصر
+        words.forEach((w, wi) => {
+          const span = document.createElement('span');
+          span.className = 'word';
+          // نستخدم textContent للحفاظ على الحروف العربية والفراغات
+          span.textContent = w;
+          // لو هي مسافة نخفف الهامش
+          if (/^\s+$/.test(w)) span.style.marginLeft = '0';
+          poemEl.appendChild(span);
+        });
+        // بعد كل سطر نضيف عنصر <br>
+        poemEl.appendChild(document.createElement('br'));
+      });
+    }
+
+    function renderByLines() {
+      clearPoem();
+      const lines = originalText.split(/\n/).map(l => l.trim()).filter(Boolean);
+      // إذا النص بلا \n، حاول تقسيمه إلى جمل قصيرة عند النقاط أو التوقفات
+      let actualLines = lines;
+      if (actualLines.length === 0) actualLines = [originalText];
+      if (actualLines.length === 1) {
+        // حاول تقسيم إلى أجزاء عن طريق النقاط أو عن طريق الطول
+        actualLines = originalText.split(/([.؟?!]+)\s*/).filter(Boolean).reduce((acc, cur, idx, arr) => {
+          // نضم المقاطع زوج زوج
+          if (/[.؟?!]+/.test(cur) && acc.length) {
+            acc[acc.length-1] += cur;
+          } else acc.push(cur);
+          return acc;
+        }, []);
+      }
+      actualLines.forEach(ln => {
+        const span = document.createElement('span');
+        span.className = 'line';
+        span.textContent = ln.trim();
+        poemEl.appendChild(span);
+        poemEl.appendChild(document.createElement('br'));
+      });
+    }
+
+    // تطبيق الأنيميشن: يضيف style inline لكل عنصر مع حساب الـdelay
+    function animate() {
+      const speed = parseInt(speedRange.value,10);
+      const stagger = parseInt(staggerRange.value,10);
+      const items = Array.from(poemEl.querySelectorAll('.word, .line'));
+      // إعادة تعيين أولاً
+      items.forEach(it => {
+        it.style.animation = 'none';
+        it.style.opacity = 0;
+      });
+
+      // force reflow
+      void poemEl.offsetWidth;
+
+      items.forEach((it, idx) => {
+        const delay = (stagger * idx) / 1000; // seconds
+        const duration = speed / 1000;
+        it.style.animation = fadeUp ${duration}s ${delay}s forwards cubic-bezier(.2,.8,.2,1);
+      });
+
+      // لو التكرار مفعل، نحسب المدة الكاملة ونكرر
+      if (loopCheckbox.checked) {
+        const totalMs = (stagger * (items.length-1)) + parseInt(speedRange.value,10) + 400;
+        // بعد الانتهاء نرجع الحالة ونشغل مرة ثانية
+        setTimeout(() => {
+          // قبل إعادة التشغيل نختار طريقة العرض نفسها
+          animate();
+        }, totalMs);
+      }
+    }
+
+    // رندر أولي
+    renderByWords();
+
+    // أحداث الواجهة
+    playBtn.addEventListener('click', () => {
+      // نعيد render لو تغير الوضع
+      if (modeSelect.value === 'word') renderByWords();
+      else renderByLines();
+
+      // ضبط قيم CSS الجذرية
+      document.documentElement.style.setProperty('--speed', speedRange.value + 'ms');
+      document.documentElement.style.setProperty('--stagger', staggerRange.value + 'ms');
+
+      // تشغّل الأنيميشن
+      animate();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      // نعيد النص الأصلي بلا تأثيرات
+      clearPoem();
+      poemEl.textContent = originalText;
+    });
+
+    modeSelect.addEventListener('change', () => {
+      if (modeSelect.value === 'word') renderByWords();
+      else renderByLines();
+    });
+
+    speedRange.addEventListener('input', (e) => {
+      speedVal.textContent = e.target.value;
+    });
+    staggerRange.addEventListener('input', (e) => {
+      staggerVal.textContent = e.target.value;
+    });
+
+    // تهيئة أولية لقيم الواجهة
+    speedVal.textContent = speedRange.value;
+    staggerVal.textContent = staggerRange.value;
+
+    // افتح مباشرة تأثير عند تحميل الصفحة لو حبيت (غير/علق السطر التالي)
+    // document.getElementById('play').click();
+  </script>
+</body>
+</html>
